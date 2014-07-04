@@ -50,7 +50,7 @@ class Solver:
 
                 known_interactions.remove(interaction)
 
-        if(len(unknown_forces) + len(unknown_moments) != 2):
+        if (len(unknown_forces) + len(unknown_moments) != 2):
             raise SolverError('There must be 2 unknowns.')
 
         #Case 1: 2 unknown forces
