@@ -6,72 +6,98 @@ from interactions import *
 
 import sys
 
-def request_num(prompt, has_limits=False, min=0, max=0, ):
+import cmd2 as cmd
 
-	valid_input = False
+from cmd2 import options, make_option
 
-	while not valid_input:
+from solver import *
 
-		try:
-			response = float(input(prompt))
-		except ValueError:
-			print('Must be a number.')
-			continue
+class Text_Interface(cmd.Cmd):
 
-		if has_limits:
-			if response >=min and response <= max:
-				valid_input = True
-			else:
-				print('Response not in valid range.')
-		else:
-			valid_input = True
+    beam = None
 
-	return response
+    def preloop(self):
+        valid = False
 
-def request_interaction(beam):
-	
-	valid_input = False
+        while not valid:
+            try: 
+                length = float(input('Enter the length of the beam: '))
+            except ValueError:
+                print('Length must be a positive number.')
+                continue
 
-	while not valid_input:
-		resp = input("Enter 'f' to enter a point force or 'm' to enter a point moment: ").lower()
+            if length > 0:
+                self.beam = Beam(length)
+                valid = True
+            else:
+                print('Length must be a positive number.')
 
-		if resp not in ['f', 'm']:
-			print('Invalid response.')
-		else:
-			valid_input = True
+    @options([make_option('-f', '--force', action="store_true", help="Add a force."),
+              make_option('-m', '--moment', action="store_true", help="Add a moment.")
+             ])
+    def do_add(self, arguments, opts=None):
+
+        list_args = str.split(arguments)
+
+        float_args = []
+
+        try:
+            for item in list_args:
+                float_args.append(float(item))
+
+        except ValueError:
+            print("Arguments must be numers.")
+            return
+
+        if opts == None:
+            print("Select either force or moment.")
+            return
+
+        if opts.force and opts.moment:
+            print("Select either force or moment.")
+            return
+
+        if len(list_args) == 1:
+            known = False
+            float_args.append(float(0))
+        elif len(list_args) == 2:
+            known = True
+        else:
+            print("Arguments must be 1 or 2 numbers.")
+        
+
+        if opts.force:
+            try:
+                self.beam.add_interaction(Force(float_args[0], float_args[1], known))
+            except InteractionLocationError:
+                print("Invalid location for force.")
+                return
+
+        elif opts.moment:
+            try:
+                self.beam.add_interaction(Moment(float_args[0], float_args[1], known))
+            except InteractionLocationError:
+                print("Invalid location for moment.")
+                return    
+
+    #Improve this later: create to string method in beam class.
+    def do_view(self, arguments):
+        print('Beam Length: ', self.beam.length, '\n\n')
+
+        print('Unknowns: ' + str(self.beam.unknowns)  + '\n\n')
+
+        for item in self.beam.interactions:
+            print(item.__class__.__name__, ' , Location: ' + str(item.location), ' , Magnitude: ' + str(item.magnitude) if item.known else '', 'Known: ', item.known)       
+
+    def do_solve(self, arguments):
+
+        Solver.solve(self.beam.interactions)
+        self.do_view(None)
+
+if __name__ == '__main__':
+
+    interface = Text_Interface()
+    interface.cmdloop()
 
 
-	if resp == 'f':
-		location = request_num('Enter the location of the force: ', True, 0, beam.length)
-		magnitude = request_num('Enter the magnitude of the force (0 for an unknown force): ')
-		
-		if magnitude == 0:
-			beam.add_interaction(Force(location, magnitude, False))
-		else:
-			beam.add_interaction(Force(location, magnitude))
-
-print('Welcome to BeamAnalyzer vAlpha\n')
-
-length = request_num('Please enter the length of the beam: ', True, 0, sys.float_info.max)
-beam = Beam(length)
-
-print("Beam created.\n\nType 'help' for a list of commands, 'q' to quit.")
-
-quit = False
-
-while not quit:
-
-	request = input('Please enter a command: ').lower()
-
-	if request in ['h', 'he', 'hel', 'help']:
-		print('insert help here')
-
-	elif request in ['q', 'qu', 'qui', 'quit']
-		quit = True
-
-	elif request in ['a', 'ad', 'add']:
-		request_interaction(beam)
-
-	else:
-		print('Invalid command.')
 
