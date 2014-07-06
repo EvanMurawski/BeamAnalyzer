@@ -12,6 +12,10 @@ from cmd2 import options, make_option
 
 from solver import *
 
+from shearmomentgenerator import Shear_Moment_Generator
+
+import matplotlib.pyplot as plt
+
 class Text_Interface(cmd.Cmd):
 
     beam = None
@@ -32,10 +36,8 @@ class Text_Interface(cmd.Cmd):
             else:
                 print('Length must be a positive number.')
 
-    @options([make_option('-f', '--force', action="store_true", help="Add a force."),
-              make_option('-m', '--moment', action="store_true", help="Add a moment.")
-             ])
-    def do_add(self, arguments, opts=None):
+    def do_addf(self, arguments):
+        """Add a force."""
 
         list_args = str.split(arguments)
 
@@ -49,13 +51,6 @@ class Text_Interface(cmd.Cmd):
             print("Arguments must be numers.")
             return
 
-        if opts == None:
-            print("Select either force or moment.")
-            return
-
-        if opts.force and opts.moment:
-            print("Select either force or moment.")
-            return
 
         if len(list_args) == 1:
             known = False
@@ -64,35 +59,77 @@ class Text_Interface(cmd.Cmd):
             known = True
         else:
             print("Arguments must be 1 or 2 numbers.")
-        
+            return
 
-        if opts.force:
-            try:
-                self.beam.add_interaction(Force(float_args[0], float_args[1], known))
-            except InteractionLocationError:
-                print("Invalid location for force.")
-                return
+        try:
+            self.beam.add_interaction(Force(float_args[0], float_args[1], known))
+        except InteractionLocationError:
+            print("Invalid location for force.")
+            return
 
-        elif opts.moment:
-            try:
-                self.beam.add_interaction(Moment(float_args[0], float_args[1], known))
-            except InteractionLocationError:
-                print("Invalid location for moment.")
-                return    
+        print("Added.") 
 
-    #Improve this later: create to string method in beam class.
+    def do_addm(self, arguments):
+        """Add a moment."""
+
+        list_args = str.split(arguments)
+
+        float_args = []
+
+        try:
+            for item in list_args:
+                float_args.append(float(item))
+
+        except ValueError:
+            print("Arguments must be numers.")
+            return
+
+
+        if len(list_args) == 1:
+            known = False
+            float_args.append(float(0))
+        elif len(list_args) == 2:
+            known = True
+        else:
+            print("Arguments must be 1 or 2 numbers.")
+            return
+
+        try:
+            self.beam.add_interaction(Moment(float_args[0], float_args[1], known))
+        except InteractionLocationError:
+            print("Invalid location for moment.")
+            return
+
+        print("Added.") 
+
+
     def do_view(self, arguments):
-        print('Beam Length: ', self.beam.length, '\n\n')
+        """View the current status of the beam."""
 
-        print('Unknowns: ' + str(self.beam.unknowns)  + '\n\n')
-
-        for item in self.beam.interactions:
-            print(item.__class__.__name__, ' , Location: ' + str(item.location), ' , Magnitude: ' + str(item.magnitude) if item.known else '', 'Known: ', item.known)       
+        print("\n", self.beam, "\n")    
+        print("Unknowns: ",self.beam.count_unknowns(), "\n")   
 
     def do_solve(self, arguments):
+        """Solve the current beam."""
 
         Solver.solve(self.beam.interactions)
         self.do_view(None)
+
+    def do_reset(self, arguments):
+        """Reset the beam."""
+
+        self.preloop()
+        print('Beam reset.')
+
+    def do_shearplot(self, arguments):
+        """Generate shear plot"""
+
+        shear_points = Shear_Moment_Generator.generate_shear(self.beam)
+        print(shear_points)
+
+        x,y = zip(*shear_points)
+        plt.plot(x,y)
+        plt.show()
 
 if __name__ == '__main__':
 
