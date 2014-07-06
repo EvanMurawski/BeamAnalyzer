@@ -30,3 +30,15 @@ class Shear_Moment_Generator:
         shear_points.append((beam.length, 0))
 
         return shear_points
+
+    @staticmethod
+    def shear_at_point(beam, point):
+
+        shear = 0.0
+
+        for item in beam.interactions:
+            if(isinstance(item, Force)):
+                if item.location < point:
+                    shear += item.magnitude
+
+        return shear

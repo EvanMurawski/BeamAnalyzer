@@ -16,6 +16,8 @@ from shearmomentgenerator import Shear_Moment_Generator
 
 import matplotlib.pyplot as plt
 
+import numpy as np
+
 class Text_Interface(cmd.Cmd):
 
     beam = None
@@ -128,6 +130,14 @@ class Text_Interface(cmd.Cmd):
         print(shear_points)
 
         x,y = zip(*shear_points)
+        plt.plot(x,y)
+        plt.show()
+
+    def do_shearfunc(self, arguments):
+        """Generate shear function"""
+
+        x = np.arange(0, self.beam.length, 0.05)
+        y = [Shear_Moment_Generator.shear_at_point(self.beam, point) for point in x]
         plt.plot(x,y)
         plt.show()
 
