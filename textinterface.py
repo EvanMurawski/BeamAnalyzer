@@ -1,28 +1,31 @@
+"""A text based UI, implemented with cmd2: https://bitbucket.org/catherinedevlin/cmd2
+
+BeamAnalyzer v0.1.0
+Copyright 2014 Evan Murawski
+License: MIT
+"""
 __author__ = 'Evan Murawski'
 
 from beam import Beam
-
-from interactions import *
-
-import sys
-
+from interactions import InteractionLocationError, Interaction, Force, Moment
 import cmd2 as cmd
-
 from cmd2 import options, make_option
-
-from solver import *
-
-from shearmomentgenerator import Shear_Moment_Generator
-
+from solver import Solver, SolverError
+from shearmomentgenerator import Shear_Moment_Generator, Shear_Moment_Error
 import matplotlib.pyplot as plt
-
 import numpy as np
 
 class Text_Interface(cmd.Cmd):
+    """Defines the text UI, using cmd2"""
 
+    #Contains the active beam
     beam = None
 
     def preloop(self):
+        """Before the loop starts: Request the beam length from the 
+        user and create a new beam.
+        """
+
         valid = False
 
         while not valid:
@@ -39,21 +42,23 @@ class Text_Interface(cmd.Cmd):
                 print('Length must be a positive number.')
 
     def do_addf(self, arguments):
-        """Add a force."""
+        """Add a force. Usage: 
+        Add a known force: addf location magnitude
+        Add an unknown force: addf location
+        """
 
         list_args = str.split(arguments)
-
         float_args = []
 
+        #Attempt to convert arguments to floating point numbers.
         try:
             for item in list_args:
                 float_args.append(float(item))
-
         except ValueError:
             print("Arguments must be numers.")
             return
 
-
+        #Determine if this will be a known or unknown force.
         if len(list_args) == 1:
             known = False
             float_args.append(float(0))
@@ -63,6 +68,7 @@ class Text_Interface(cmd.Cmd):
             print("Arguments must be 1 or 2 numbers.")
             return
 
+        #Add the force.
         try:
             self.beam.add_interaction(Force(float_args[0], float_args[1], known))
         except InteractionLocationError:
@@ -72,21 +78,23 @@ class Text_Interface(cmd.Cmd):
         print("Added.") 
 
     def do_addm(self, arguments):
-        """Add a moment."""
+        """Add a moment. Usage: 
+        Add a known moment: addm location magnitude
+        Add an unknown moment: addm location
+        """
 
         list_args = str.split(arguments)
-
         float_args = []
 
+        #Attempt to convert the args to floating point numbers.
         try:
             for item in list_args:
                 float_args.append(float(item))
-
         except ValueError:
             print("Arguments must be numers.")
             return
 
-
+        #Determine if this is a known or unknown moment.
         if len(list_args) == 1:
             known = False
             float_args.append(float(0))
@@ -96,6 +104,7 @@ class Text_Interface(cmd.Cmd):
             print("Arguments must be 1 or 2 numbers.")
             return
 
+        #Add the moment.
         try:
             self.beam.add_interaction(Moment(float_args[0], float_args[1], known))
         except InteractionLocationError:
@@ -118,30 +127,43 @@ class Text_Interface(cmd.Cmd):
         self.do_view(None)
 
     def do_reset(self, arguments):
-        """Reset the beam."""
+        """Reset the beam - lets you create a new beam."""
 
         self.preloop()
         print('Beam reset.')
 
-    def do_shearplot(self, arguments):
-        """Generate shear plot"""
+    @options([make_option('-s', '--step', type="float", help="Specify the step size.")])
+    def do_plot(self, arguments, opts=None):
+        """Plot the shear / moment diagram. Usage:
+        plot [-s stepsize] (default step size 0.01)
+        """
 
-        shear_points = Shear_Moment_Generator.generate_shear(self.beam)
-        print(shear_points)
+        step_size = 0.01
 
-        x,y = zip(*shear_points)
-        plt.plot(x,y)
-        plt.show()
+        if opts.step != None:
+            step_size = opts.step
 
-    def do_shearfunc(self, arguments):
-        """Generate shear function"""
+        #Generate the shear and moment points, using generate_numerical
+        shear_moment = Shear_Moment_Generator.generate_numerical(self.beam, step_size)
 
-        x = np.arange(0, self.beam.length, 0.05)
-        y = [Shear_Moment_Generator.shear_at_point(self.beam, point) for point in x]
-        plt.plot(x,y)
+        #Plot the points
+        x = np.arange(0, self.beam.length, step_size)
+
+        shear = [y[0] for y in shear_moment]
+        moment = [y[1] for y in shear_moment]
+
+        plt.subplot(2,1,1)
+        plt.plot(x, shear)
+        plt.title('Shear')
+
+        plt.subplot(2, 1, 2)
+        plt.plot(x, moment)
+        plt.title('Moment')
+
         plt.show()
 
 if __name__ == '__main__':
+    """The main method."""
 
     interface = Text_Interface()
     interface.cmdloop()

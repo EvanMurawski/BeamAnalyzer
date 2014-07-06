@@ -1,16 +1,25 @@
+"""Contains the classes and functions used to solve a beam with two unknown interactions. 
+Currently supports 2 unknown forces or 1 unknown moment and 1 unknown force. There
+is currently no support for distributed forces.
+"""
 __author__ = 'Evan Murawski'
 
 import numpy as np
-
-from interactions import *
+from interactions import InteractionLocationError, Interaction, Force, Moment
 
 class SolverError(Exception):
+    """Solver Errors"""
     pass
 
 class Solver:
+    """Solves a beam with two unknown interactions"""
+
 
     @staticmethod
     def sum_knowns(known_interactions):
+        """Individually sums the magnitudes of the known forces and known moments it is passed. 
+        returns these as a numpy array object in format ([-sum_known forces, -sum_known_moments])
+        """
 
         sum_known_forces = 0
         sum_known_moments = 0
@@ -26,7 +35,6 @@ class Solver:
         b_2 = -sum_known_moments
         
         return np.array([b_1, b_2])
-
 
 
     @staticmethod
@@ -81,6 +89,7 @@ class Solver:
         #Case 2: 1 unknown force and 1 unknown moment
         elif len(unknown_forces) == 1 and len(unknown_moments) == 1:
 
+            #Define elements of matricies
             a_1_1 = 0
             a_1_2 = 1
             a_2_1 = 1

@@ -1,14 +1,18 @@
+"""Contains the Beam class which defines a Beam object"""
 __author__ = 'Evan Murawski'
 
-from interactions import *
+from interactions import InteractionLocationError, Interaction, Force, Moment
 from tabulate import tabulate
 
 class Beam:
+    """Defines a beam object which contains a length and a 
+    list of interaction objects.
+    """
 
     def __init__(self, length):
         """Create a beam object with specified length, starts with
-        no interactions, zero knowns and unknowns"""
-
+        no interactions
+        """
         self.length = length
         self.interactions = []
 
@@ -40,6 +44,7 @@ class Beam:
         self.interactions.sort(key=lambda item: item.location)
 
     def __str__(self):
+        """A string representation of the beam, using tabulate."""
 
         table = [[item.__class__.__name__,
                  item.location, 
@@ -51,6 +56,8 @@ class Beam:
 
 
     def count_knowns(self):
+        """returns the number of known interactions in the beam."""
+
         knowns = 0
         for item in self.interactions:
             if item.known:
@@ -59,18 +66,11 @@ class Beam:
         return knowns
 
     def count_unknowns(self):
+        """Returns the number of unknown interactions in the beam."""
+
         unknowns = 0
         for item in self.interactions:
             if not item.known:
                 unknowns += 1
 
         return unknowns
-
-
-
-
-
-
-
-
-
