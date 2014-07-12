@@ -1,7 +1,7 @@
 """Contains the Beam class which defines a Beam object"""
 __author__ = 'Evan Murawski'
 
-from interactions import InteractionLocationError, Interaction, Force, Moment
+from interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
 from tabulate import tabulate
 
 class Beam:
@@ -24,6 +24,10 @@ class Beam:
         if interaction.location > self.length:
             raise InteractionLocationError(interaction.location)
 
+        if isinstance(interaction, Dist_Force):
+            if interaction.end > self.length:
+                raise InteractionLocationError(interaction.end)
+
         self.interactions.append(interaction)
 
         self.interactions.sort(key=lambda item: item.location)
@@ -38,6 +42,10 @@ class Beam:
             if interaction.location > self.length:
                 raise InteractionLocationError(interaction.location)
 
+            if isinstance(interaction, Dist_Force):
+                if interaction.end > self.length:
+                    raise InteractionLocationError(interaction.end)
+
         for interaction in list_interactions:
             self.interactions.append(interaction)
 
@@ -47,7 +55,7 @@ class Beam:
         """A string representation of the beam, using tabulate."""
 
         table = [[item.__class__.__name__,
-                 item.location, 
+                 str(item.location) + " , "+ str(item.end) if isinstance(item, Dist_Force) else item.location, 
                  item.magnitude if item.known else 'N/A',
                  "Known" if item.known else "Unknown"] 
                  for item in self.interactions]

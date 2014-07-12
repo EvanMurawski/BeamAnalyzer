@@ -5,7 +5,7 @@ is currently no support for distributed forces.
 __author__ = 'Evan Murawski'
 
 import numpy as np
-from interactions import InteractionLocationError, Interaction, Force, Moment
+from interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
 from beam import Beam
 
 class SolverError(Exception):
@@ -33,13 +33,27 @@ def sum_knowns(known_interactions):
     
     return np.array([b_1, b_2])
 
+def pointify_interactions(original_interactions):
+
+    pointified_interactions = []
+
+    for interaction in original_interactions:
+        if not isinstance(interaction, Dist_Force):
+            pointified_interactions.append(interaction)
+        else:
+            pointified_magnitude = interaction.magnitude * (interaction.end - interaction.location)
+            pointified_location = (interaction.end + interaction.location)/2
+            pointified_interactions.append(Force(pointified_location, pointified_magnitude))
+
+    return pointified_interactions
+
 
 def solve(beam):
     """Solves a list of interactions with 2 unknowns. Modifies the list
     it is passed to contain the solved quantities, with known = True. Returns 
     the modified list."""
 
-    list_interactions = beam.interactions
+    list_interactions = pointify_interactions(beam.interactions)
 
     unknown_forces = []
     unknown_moments = []

@@ -41,3 +41,14 @@ class Moment(Interaction):
 
     def __init__(self, location, magnitude, known=True):
         Interaction.__init__(self, location, magnitude, known)
+
+class Dist_Force(Interaction):
+    """A distributed force. Subclass of Interaction. Must be known."""
+
+    def __init__(self, location, magnitude, end):
+
+        if(end <= location):
+            raise InteractionLocationError(end)
+            
+        Interaction.__init__(self, location, magnitude, True)
+        self.end = end
