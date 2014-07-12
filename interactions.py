@@ -47,8 +47,8 @@ class Dist_Force(Interaction):
 
     def __init__(self, location, magnitude, end):
 
-        if(end <= location):
+        if(end < location):
             raise InteractionLocationError(end)
-            
+
         Interaction.__init__(self, location, magnitude, True)
         self.end = end

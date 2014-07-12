@@ -4,7 +4,7 @@ point forces and moments.
 __author__ = 'Evan Murawski'
 
 from beam import Beam
-from interactions import Interaction, InteractionLocationError, Force, Moment
+from interactions import Interaction, InteractionLocationError, Force, Moment, Dist_Force
 import solver
 from solver import SolverError
 import numpy as np
@@ -53,8 +53,15 @@ def gen_sub_beam(beam, sub_length):
     sub_beam = Beam(sub_length)
 
     for item in beam.interactions:
-        if item.location <= sub_length:
-            sub_beam.add_interaction(item)
+        if not isinstance(item, Dist_Force):
+            if item.location <= sub_length:
+                sub_beam.add_interaction(item)
+
+        else:
+            if item.end <= sub_length:
+                sub_beam.add_interaction(item)
+            else:
+                sub_beam.add_interaction(Dist_Force(item.location, item.magnitude, sub_length))
 
     return sub_beam
 
