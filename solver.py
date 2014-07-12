@@ -1,4 +1,4 @@
-"""Contains the classes and functions used to solve a beam with two unknown interactions. 
+"""Contains the classes and functions used to solve a Fbeam with two unknown interactions. 
 Currently supports 2 unknown forces or 1 unknown moment and 1 unknown force. There
 is currently no support for distributed forces.
 """
@@ -6,109 +6,106 @@ __author__ = 'Evan Murawski'
 
 import numpy as np
 from interactions import InteractionLocationError, Interaction, Force, Moment
+from beam import Beam
 
 class SolverError(Exception):
     """Solver Errors"""
     pass
 
-class Solver:
-    """Solves a beam with two unknown interactions"""
+
+def sum_knowns(known_interactions):
+    """Individually sums the magnitudes of the known forces and known moments it is passed. 
+    returns these as a numpy array object in format ([-sum_known forces, -sum_known_moments])
+    """
+
+    sum_known_forces = 0
+    sum_known_moments = 0
+
+    for item in known_interactions:
+        if isinstance(item, Force):
+            sum_known_forces += item.magnitude
+            sum_known_moments += item.magnitude * item.location
+        if isinstance(item, Moment):
+            sum_known_moments += item.magnitude
+
+    b_1 = -sum_known_forces
+    b_2 = -sum_known_moments
+    
+    return np.array([b_1, b_2])
 
 
-    @staticmethod
-    def sum_knowns(known_interactions):
-        """Individually sums the magnitudes of the known forces and known moments it is passed. 
-        returns these as a numpy array object in format ([-sum_known forces, -sum_known_moments])
-        """
+def solve(beam):
+    """Solves a list of interactions with 2 unknowns. Modifies the list
+    it is passed to contain the solved quantities, with known = True. Returns 
+    the modified list."""
 
-        sum_known_forces = 0
-        sum_known_moments = 0
+    list_interactions = beam.interactions
 
-        for item in known_interactions:
-            if isinstance(item, Force):
-                sum_known_forces += item.magnitude
-                sum_known_moments += item.magnitude * item.location
-            if isinstance(item, Moment):
-                sum_known_moments += item.magnitude
+    unknown_forces = []
+    unknown_moments = []
 
-        b_1 = -sum_known_forces
-        b_2 = -sum_known_moments
-        
-        return np.array([b_1, b_2])
+    known_interactions = list(list_interactions)
 
+    for interaction in list_interactions:
+        if not interaction.known:
+            if isinstance(interaction, Force):
+                unknown_forces.append(interaction)
+            if isinstance(interaction, Moment):
+                unknown_moments.append(interaction)
 
-    @staticmethod
-    def solve(list_interactions):
-        """Solves a list of interactions with 2 unknowns. Modifies the list
-        it is passed to contain the solved quantities, with known = True. Returns 
-        the modified list."""
+            known_interactions.remove(interaction)
 
+    if (len(unknown_forces) + len(unknown_moments) != 2):
+        raise SolverError('There must be 2 unknowns.')
 
-        unknown_forces = []
-        unknown_moments = []
+    #Case 1: 2 unknown forces
+    if len(unknown_forces) == 2 and len(unknown_moments) == 0:
 
-        known_interactions = list(list_interactions)
+        #define elements of matrices
+        a_1_1 = 1
+        a_1_2 = 1
 
-        for interaction in list_interactions:
-            if not interaction.known:
-                if isinstance(interaction, Force):
-                    unknown_forces.append(interaction)
-                if isinstance(interaction, Moment):
-                    unknown_moments.append(interaction)
+        a_2_1 = unknown_forces[0].location
+        a_2_2 = unknown_forces[1].location
 
-                known_interactions.remove(interaction)
+        a = np.array([[a_1_1, a_1_2], [a_2_1, a_2_2]])
+        b = sum_knowns(known_interactions)
 
-        if (len(unknown_forces) + len(unknown_moments) != 2):
-            raise SolverError('There must be 2 unknowns.')
+        try:
+            x = np.linalg.solve(a, b)
+        except LinAlgError:
+            raise SolverError('Something went wrong with the linear algebra.')
 
-        #Case 1: 2 unknown forces
-        if len(unknown_forces) == 2 and len(unknown_moments) == 0:
+        unknown_forces[0].magnitude = x[0]
+        unknown_forces[0].known = True
+        unknown_forces[1].magnitude = x[1]
+        unknown_forces[1].known = True
 
-            #define elements of matrices
-            a_1_1 = 1
-            a_1_2 = 1
+        return list_interactions
 
-            a_2_1 = unknown_forces[0].location
-            a_2_2 = unknown_forces[1].location
+    #Case 2: 1 unknown force and 1 unknown moment
+    elif len(unknown_forces) == 1 and len(unknown_moments) == 1:
 
-            a = np.array([[a_1_1, a_1_2], [a_2_1, a_2_2]])
-            b = Solver.sum_knowns(known_interactions)
+        #Define elements of matricies
+        a_1_1 = 0
+        a_1_2 = 1
+        a_2_1 = 1
+        a_2_2 = unknown_forces[0].location
 
-            try:
-                x = np.linalg.solve(a, b)
-            except LinAlgError:
-                raise SolverError('Something went wrong with the linear algebra.')
+        b = sum_knowns(known_interactions)
+        a = np.array([[a_1_1, a_1_2], [a_2_1, a_2_2]])
 
-            unknown_forces[0].magnitude = x[0]
-            unknown_forces[0].known = True
-            unknown_forces[1].magnitude = x[1]
-            unknown_forces[1].known = True
+        try:
+            x = np.linalg.solve(a, b)
+        except LinAlgError:
+            raise SolverError('Something went wrong with the linear algebra.')
 
-            return list_interactions
+        unknown_moments[0].magnitude = x[0]
+        unknown_moments[0].known = True
+        unknown_forces[0].magnitude = x[1]
+        unknown_forces[0].known = True
 
-        #Case 2: 1 unknown force and 1 unknown moment
-        elif len(unknown_forces) == 1 and len(unknown_moments) == 1:
+        return list_interactions
 
-            #Define elements of matricies
-            a_1_1 = 0
-            a_1_2 = 1
-            a_2_1 = 1
-            a_2_2 = unknown_forces[0].location
-
-            b = Solver.sum_knowns(known_interactions)
-            a = np.array([[a_1_1, a_1_2], [a_2_1, a_2_2]])
-
-            try:
-                x = np.linalg.solve(a, b)
-            except LinAlgError:
-                raise SolverError('Something went wrong with the linear algebra.')
-
-            unknown_moments[0].magnitude = x[0]
-            unknown_moments[0].known = True
-            unknown_forces[0].magnitude = x[1]
-            unknown_forces[0].known = True
-
-            return list_interactions
-
-        else:
-            raise SolverError('Unsupported case: only 1F,1M and 2F supported.')
+    else:
+        raise SolverError('Unsupported case: only 1F,1M and 2F supported.')

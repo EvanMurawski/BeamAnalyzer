@@ -10,8 +10,10 @@ from beam import Beam
 from interactions import InteractionLocationError, Interaction, Force, Moment
 import cmd2 as cmd
 from cmd2 import options, make_option
-from solver import Solver, SolverError
-from shearmomentgenerator import Shear_Moment_Generator, Shear_Moment_Error
+import solver
+from solver import SolverError
+import shearmomentgenerator
+from shearmomentgenerator import Shear_Moment_Error
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -123,7 +125,7 @@ class Text_Interface(cmd.Cmd):
     def do_solve(self, arguments):
         """Solve the current beam."""
 
-        Solver.solve(self.beam.interactions)
+        solver.solve(self.beam)
         self.do_view(None)
 
     def do_reset(self, arguments):
@@ -144,7 +146,7 @@ class Text_Interface(cmd.Cmd):
             step_size = opts.step
 
         #Generate the shear and moment points, using generate_numerical
-        shear_moment = Shear_Moment_Generator.generate_numerical(self.beam, step_size)
+        shear_moment = shearmomentgenerator.generate_numerical(self.beam, step_size)
 
         #Plot the points
         x = np.arange(0, self.beam.length, step_size)
