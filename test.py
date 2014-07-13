@@ -36,6 +36,14 @@ class TestBeamAnalyzer(unittest.TestCase):
 		self.beams[1].add_interaction(Force(5.5, 10))
 		self.beams[1].add_interaction(Moment(4, 40))
 
+		self.beams.append(Beam(30))
+
+		self.beams[2].add_interaction(Force(0, 0, False))
+		self.beams[2].add_interaction(Force(20, 0, False))
+		self.beams[2].add_interaction(Dist_Force(0, -1, 10))
+		self.beams[2].add_interaction(Force(15, -20))
+		self.beams[2].add_interaction(Force(30, -10))
+
 	#A very simple beam with one known force and two unknown forces
 	def test_beam0(self):
 		solver.solve(self.beams[0])
@@ -92,6 +100,30 @@ class TestBeamAnalyzer(unittest.TestCase):
 
 		plt.show()
 		"""
+
+	def test_beam2(self):
+		solver.solve(self.beams[2])
+
+		#Test the solution
+		self.assertEqual(7.5, self.beams[2].interactions[0].magnitude)
+		self.assertEqual(32.5, self.beams[2].interactions[3].magnitude)
+
+		shear_moment = shearmomentgenerator.generate_numerical(self.beams[2], self.STEP_SIZE)
+
+		#Test shear
+		assert abs(shear_moment[0][0] - 7.5) < self.ALMOST
+		assert abs(shear_moment[int(10/self.STEP_SIZE)][0] - (-2.5)) < self.ALMOST
+		assert abs(shear_moment[int(15/self.STEP_SIZE) - 1][0] - (-2.5)) < self.ALMOST
+		assert abs(shear_moment[int(15/self.STEP_SIZE) + 1][0] - (-22.5)) < self.ALMOST
+		assert abs(shear_moment[int(20/self.STEP_SIZE) - 1][0] - (-22.5)) < self.ALMOST
+		assert abs(shear_moment[int(20/self.STEP_SIZE) + 1][0] - (10)) < self.ALMOST
+
+		#Test moment
+		assert abs(shear_moment[0][1] - 0) < self.ALMOST
+		assert abs(shear_moment[int(10/self.STEP_SIZE)][1] - 25) < self.ALMOST
+		assert abs(shear_moment[int(15/self.STEP_SIZE)][1] - 12.5) < self.ALMOST
+		assert abs(shear_moment[int(20/self.STEP_SIZE)][1] - (-100)) < self.ALMOST
+		assert abs(shear_moment[int(30/self.STEP_SIZE) -1][1] - 0) < self.ALMOST
 
  
 	def test_interaction_location_error(self):
