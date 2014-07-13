@@ -7,7 +7,7 @@ License: MIT
 __author__ = 'Evan Murawski'
 
 from beam import Beam
-from interactions import InteractionLocationError, Interaction, Force, Moment
+from interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
 import cmd2 as cmd
 from cmd2 import options, make_option
 import solver
@@ -114,6 +114,36 @@ class Text_Interface(cmd.Cmd):
             return
 
         print("Added.") 
+
+    def do_adddf(self, arguments):
+        """Add a distributed force. Usage: 
+        Add a distributed force: addf start magnitude end
+        """
+
+        list_args = str.split(arguments)
+        float_args = []
+
+        #Attempt to convert arguments to floating point numbers.
+        try:
+            for item in list_args:
+                float_args.append(float(item))
+        except ValueError:
+            print("Arguments must be numers.")
+            return
+
+        #Determine if this will be a known or unknown force.
+        if len(list_args) != 3:
+            print("Arguments must be 3 numbers.")
+            return
+
+        #Add the force.
+        try:
+            self.beam.add_interaction(Dist_Force(float_args[0], float_args[1], float_args[2]))
+        except InteractionLocationError:
+            print("Invalid location for distributed force.")
+            return
+
+        print("Added.")
 
 
     def do_view(self, arguments):
