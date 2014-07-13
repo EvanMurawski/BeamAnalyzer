@@ -23,6 +23,8 @@ class Text_Interface(cmd.Cmd):
     #Contains the active beam
     beam = None
 
+    PLOT_MARGIN = 0.15
+
     def preloop(self):
         """Before the loop starts: Request the beam length from the 
         user and create a new beam.
@@ -164,7 +166,8 @@ class Text_Interface(cmd.Cmd):
         self.preloop()
         print('Beam reset.')
 
-    @options([make_option('-s', '--step', type="float", help="Specify the step size.")])
+    @options([make_option('-s', '--step', type="float", help="Specify the step size."),
+            make_option('-a', '--annotate', action="store_true", help="Annotate key points on the graph.")])
     def do_plot(self, arguments, opts=None):
         """Plot the shear / moment diagram. Usage:
         plot [-s stepsize] (default step size 0.01)
@@ -172,8 +175,13 @@ class Text_Interface(cmd.Cmd):
 
         step_size = 0.01
 
+        annotate = False
+
         if opts.step != None:
             step_size = opts.step
+
+        if opts.annotate != None:
+            annotate = True
 
         #Generate the shear and moment points, using generate_numerical
         shear_moment = shearmomentgenerator.generate_numerical(self.beam, step_size)
@@ -184,13 +192,39 @@ class Text_Interface(cmd.Cmd):
         shear = [y[0] for y in shear_moment]
         moment = [y[1] for y in shear_moment]
 
-        plt.subplot(2,1,1)
-        plt.plot(x, shear)
+        fig = plt.figure()
+
+        shear_plot = fig.add_subplot(211)
+        shear_plot.plot(x, shear)
         plt.title('Shear')
 
-        plt.subplot(2, 1, 2)
-        plt.plot(x, moment)
+        moment_plot = fig.add_subplot(212)
+        moment_plot.plot(x, moment)
         plt.title('Moment')
+
+        if annotate:
+            for interaction in self.beam.interactions:
+                point_one = int(interaction.location / step_size) - 1
+                point_two = int(interaction.location / step_size)
+    
+                
+                shear_plot.annotate('(' + str(interaction.location) + 
+                    ', ' + str(shear[point_one]) + ')', xy=(interaction.location, shear[point_one]), textcoords='offset points')
+    
+                if isinstance(interaction, Moment):
+                    moment_plot.annotate('(' + str(interaction.location) + 
+                        ', ' + str(moment[point_one]) + ')', xy=(interaction.location, moment[point_one]), textcoords='offset points')
+    
+                if interaction.location != self.beam.length:
+                    shear_plot.annotate('(' + str(interaction.location) + 
+                        ', ' + str(shear[point_two]) + ')', xy=(interaction.location, shear[point_two]), textcoords='offset points')
+    
+                    moment_plot.annotate('(' + str(interaction.location) + 
+                        ', ' + str(moment[point_two]) + ')', xy=(interaction.location, moment[point_two]), textcoords='offset points')
+
+
+        shear_plot.axis([min(x), max(x), min(shear) - self.PLOT_MARGIN * (max(shear)-min(shear)), max(shear) + self.PLOT_MARGIN * (max(shear)-min(shear))])
+        moment_plot.axis([min(x), max(x), min(moment) - self.PLOT_MARGIN * (max(moment)-min(moment)), max(moment) + self.PLOT_MARGIN * (max(moment)-min(moment))])
 
         plt.show()
 
