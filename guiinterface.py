@@ -1,11 +1,27 @@
 from PyQt4 import QtCore, QtGui
 from guistructure import Ui_Beam
+from forcemomentprompt import Ui_Force_Moment_Dialog
 from beam import Beam
 import sys
 
+def unknown_state_change(lineEdit, label):
+    lineEdit.setVisible(not lineEdit.isVisible())
+    label.setVisible(not label.isVisible())
 
 def add_force_clicked():
-    print("addforce")
+    dialog = QtGui.QDialog()
+    dialog_ui = Ui_Force_Moment_Dialog()
+    dialog_ui.setupUi(dialog)
+
+    #Setup stuff
+    dialog_ui.checkBox.stateChanged.connect(lambda: unknown_state_change(dialog_ui.lineEdit_2, dialog_ui.label_magnitude))
+
+
+    dialog.exec_()
+
+    
+
+
 
 def add_moment_clicked():
     pass

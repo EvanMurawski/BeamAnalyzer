@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'guistructure.ui'
 #
-# Created: Wed Jul 16 21:58:48 2014
+# Created: Sat Jul 19 18:12:02 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
