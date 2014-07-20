@@ -202,6 +202,8 @@ class Text_Interface(cmd.Cmd):
         moment_plot.plot(x, moment)
         plt.title('Moment')
 
+        canvas.draw()
+
         if annotate:
             for interaction in self.beam.interactions:
                 point_one = int(interaction.location / step_size) - 1
