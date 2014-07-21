@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'guistructure.ui'
 #
-# Created: Sat Jul 19 18:12:02 2014
+# Created: Sun Jul 20 20:20:13 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -107,6 +107,15 @@ class Ui_Beam(object):
         self.treeWidget.header().setDefaultSectionSize(75)
         self.horizontalLayout_2.addWidget(self.treeWidget)
         self.verticalLayout_1.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout_5 = QtGui.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
+        self.pushButton_clear = QtGui.QPushButton(Beam)
+        self.pushButton_clear.setObjectName(_fromUtf8("pushButton_clear"))
+        self.horizontalLayout_5.addWidget(self.pushButton_clear)
+        self.pushButton_new = QtGui.QPushButton(Beam)
+        self.pushButton_new.setObjectName(_fromUtf8("pushButton_new"))
+        self.horizontalLayout_5.addWidget(self.pushButton_new)
+        self.verticalLayout_1.addLayout(self.horizontalLayout_5)
         self.verticalLayout_1.setStretch(0, 3)
         self.verticalLayout_1.setStretch(1, 1)
         self.verticalLayout_1.setStretch(2, 2)
@@ -130,4 +139,6 @@ class Ui_Beam(object):
         self.treeWidget.headerItem().setText(1, _translate("Beam", "Location", None))
         self.treeWidget.headerItem().setText(2, _translate("Beam", "Magnitude", None))
         self.treeWidget.headerItem().setText(3, _translate("Beam", "Known", None))
+        self.pushButton_clear.setText(_translate("Beam", "Clear All", None))
+        self.pushButton_new.setText(_translate("Beam", "New Beam", None))
 
