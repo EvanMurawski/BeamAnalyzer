@@ -158,12 +158,27 @@ def clear_clicked():
     plt.clf()
     canvas.draw()
 
-def get_length():
+def new_clicked():
+
+    global beam
 
     length, ok = QtGui.QInputDialog.getDouble(window, "Beam Length",
-        "Enter the length of the beam:", 0, 0, sys.float_info.max, 5)
+            "Enter the length of the beam:", 0, 0, sys.float_info.max, 5)
+    if ok:
+        beam = Beam(length)
+        update_tree(beam)
+        plt.clf()
+        canvas.draw()
 
-    return length
+def make_first_beam():
+
+    ok = False
+
+    while not ok:
+        length, ok = QtGui.QInputDialog.getDouble(window, "Beam Length",
+            "Enter the length of the beam:", 0, 0, sys.float_info.max, 5)
+
+    return Beam(length)
 
 
 def make_links():
@@ -173,6 +188,7 @@ def make_links():
     ui.pushButton_solve.clicked.connect(solve_clicked)
     ui.pushButton_plot.clicked.connect(plot_clicked)
     ui.pushButton_clear.clicked.connect(clear_clicked)
+    ui.pushButton_new.clicked.connect(new_clicked)
 
 
 if __name__ == '__main__':
@@ -202,8 +218,7 @@ if __name__ == '__main__':
     make_links()
 
     #setup beam
-    beam = Beam(get_length())
-
+    beam = make_first_beam()
 
     #Exit shell when window exits
     sys.exit(app.exec_())
