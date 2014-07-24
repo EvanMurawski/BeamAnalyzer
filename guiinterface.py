@@ -151,6 +151,13 @@ def plot_clicked():
     #update the canvas
     canvas.draw()
 
+def clear_clicked():
+    global beam
+    beam = Beam(beam.length)
+    update_tree(beam)
+    plt.clf()
+    canvas.draw()
+
 def get_length():
 
     length, ok = QtGui.QInputDialog.getDouble(window, "Beam Length",
@@ -165,6 +172,7 @@ def make_links():
     ui.pushButton_distforce.clicked.connect(add_distforce_clicked)
     ui.pushButton_solve.clicked.connect(solve_clicked)
     ui.pushButton_plot.clicked.connect(plot_clicked)
+    ui.pushButton_clear.clicked.connect(clear_clicked)
 
 
 if __name__ == '__main__':
