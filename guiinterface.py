@@ -235,6 +235,15 @@ def new_clicked():
         plt.clf()
         canvas.draw()
 
+def quit_clicked():
+    app.quit()
+
+def settings_clicked():
+    pass
+
+def show_menu():
+    pass
+
 def make_first_beam():
 
     ok = False
@@ -254,7 +263,9 @@ def make_links():
     ui.pushButton_plot.clicked.connect(plot_clicked)
     ui.pushButton_clear.clicked.connect(clear_clicked)
     ui.pushButton_new.clicked.connect(new_clicked)
-
+    main_window_ui.actionQuit.triggered.connect(quit_clicked)
+    main_window_ui.actionSettings.triggered.connect(settings_clicked)
+    ui.treeWidget.customContextMenuRequested.connect(show_menu)
 
 if __name__ == '__main__':
 
@@ -271,7 +282,7 @@ if __name__ == '__main__':
     #Setup main window
     main_window = QtGui.QMainWindow()
     main_window_ui = Ui_MainWindow()
-    main_window_ui.setupUi(mainwindow)
+    main_window_ui.setupUi(main_window)
 
     main_window.setCentralWidget(window)
 
@@ -281,6 +292,10 @@ if __name__ == '__main__':
     toolbar = NavigationToolbar(canvas, window)
     ui.verticalLayout_3.addWidget(toolbar)
     ui.verticalLayout_3.addWidget(canvas)
+
+    #setup context menu
+    ui.treeWidget.setContextMenuPolicy(3)
+
 
     #Show the window
     main_window.show()
@@ -293,3 +308,5 @@ if __name__ == '__main__':
 
     #Exit shell when window exits
     sys.exit(app.exec_())
+
+

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'distforceprompt.ui'
 #
-# Created: Sat Jul 26 16:50:30 2014
+# Created: Sat Jul 26 17:28:42 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'guistructure.ui'
 #
-# Created: Sat Jul 26 16:50:30 2014
+# Created: Sat Jul 26 17:28:42 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -124,6 +124,8 @@ class Ui_Beam(object):
         self.horizontalLayout_1.setStretch(0, 2)
         self.horizontalLayout_1.setStretch(1, 1)
         self.horizontalLayout.addLayout(self.horizontalLayout_1)
+        self.actionDelete = QtGui.QAction(Beam)
+        self.actionDelete.setObjectName(_fromUtf8("actionDelete"))
 
         self.retranslateUi(Beam)
         QtCore.QMetaObject.connectSlotsByName(Beam)
@@ -141,4 +143,5 @@ class Ui_Beam(object):
         self.treeWidget.headerItem().setText(3, _translate("Beam", "Known", None))
         self.pushButton_clear.setText(_translate("Beam", "Clear All", None))
         self.pushButton_new.setText(_translate("Beam", "New Beam", None))
+        self.actionDelete.setText(_translate("Beam", "Delete", None))
 
