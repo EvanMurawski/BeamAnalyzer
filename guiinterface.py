@@ -1,6 +1,7 @@
 from PyQt4 import QtCore, QtGui
 from guistructure import Ui_Beam
 from forcemomentprompt import Ui_Force_Moment_Dialog
+from distforceprompt import Ui_Dist_Force_Dialog
 from interactions import Force, Interaction, InteractionLocationError, Moment, Dist_Force
 from beam import Beam
 import solver
@@ -12,8 +13,6 @@ import shearmomentgenerator
 from shearmomentgenerator import Shear_Moment_Error 
 import numpy as np
 import sys
-#TODO: make a function in interaction that returns a list of strings representing the interaction
-
 
 
 def update_tree(beam):
@@ -42,6 +41,17 @@ def adjust_ok_buttons_state(ui, ok):
         ok.setEnabled(True)
     else:
         ok.setEnabled(False)
+
+def dist_force_dialog_input_acceptable(ui):
+    return ui.lineEdit_start.hasAcceptableInput() and ui.lineEdit_end.hasAcceptableInput() and ui.lineEdit_magnitude.hasAcceptableInput()
+
+def adjust_ok_buttons_state_dist(ui, ok, end_validator):
+    if dist_force_dialog_input_acceptable(ui):
+        ok.setEnabled(True)
+    else:
+        ok.setEnabled(False)
+
+    end_validator.setRange(float(ui.lineEdit_start.text()) if ui.lineEdit_start.text() else beam.length, beam.length, 5)
 
 def interaction_prompt(is_force):
  
@@ -108,7 +118,57 @@ def add_moment_clicked():
     interaction_prompt(False)
 
 def add_distforce_clicked():
-    pass
+
+    #Create the dialog
+    dialog = QtGui.QDialog()
+    dialog_ui = Ui_Dist_Force_Dialog()
+    dialog_ui.setupUi(dialog)
+
+    #Setup stuff
+         
+    #Initially, hide the ok button
+    ok = dialog_ui.buttonBox.button(QtGui.QDialogButtonBox.Ok)
+    ok.setEnabled(False)
+
+    #Set the initial text
+    dialog_ui.lineEdit_start.setText("0")
+    dialog_ui.lineEdit_magnitude.setText("0")
+    dialog_ui.lineEdit_end.setText("0")
+
+    #Setup input validators
+    start_validator = QtGui.QDoubleValidator()
+    start_validator.setRange(0, beam.length, 5)
+
+    end_validator = QtGui.QDoubleValidator()
+    end_validator.setRange(0, beam.length, 5)
+
+    magnitude_validator = QtGui.QDoubleValidator()
+    magnitude_validator.setDecimals(5)
+
+    #Apply the input validators
+    dialog_ui.lineEdit_start.setValidator(start_validator)
+    dialog_ui.lineEdit_end.setValidator(end_validator)
+    dialog_ui.lineEdit_magnitude.setValidator(magnitude_validator)
+
+    #Adjust the visibility of the ok button if the input is changed
+    dialog_ui.lineEdit_start.textChanged.connect(lambda: adjust_ok_buttons_state_dist(dialog_ui, ok, end_validator))
+    dialog_ui.lineEdit_end.textChanged.connect(lambda: adjust_ok_buttons_state_dist(dialog_ui, ok, end_validator))
+    dialog_ui.lineEdit_magnitude.textChanged.connect(lambda: adjust_ok_buttons_state_dist(dialog_ui, ok, end_validator))
+
+    #Show the dialog
+    dialog.exec_()
+
+    #If ok is pressed, create the new force
+    if dialog.result():
+
+        interaction = Dist_Force(float(dialog_ui.lineEdit_start.text()), float(dialog_ui.lineEdit_magnitude.text()), float(dialog_ui.lineEdit_end.text()))
+
+        beam.add_interaction(interaction)
+
+        update_tree(beam)
+
+        print(beam)
+
 
 def solve_clicked():
     try:
@@ -120,6 +180,10 @@ def solve_clicked():
     update_tree(beam)
 
 def plot_clicked():
+
+    if len(beam.interactions) < 1:
+        QtGui.QMessageBox.warning(window,"Error", "There is nothing to plot.")
+        return
 
     #Clear the plot
     plt.clf()
