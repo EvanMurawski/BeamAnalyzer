@@ -57,7 +57,7 @@ def gen_sub_beam(beam, sub_length):
             if item.location <= sub_length:
                 sub_beam.add_interaction(item)
 
-        else:
+        elif item.location <= sub_length:
             if item.end <= sub_length:
                 sub_beam.add_interaction(item)
             else:
