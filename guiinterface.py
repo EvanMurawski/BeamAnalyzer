@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import shearmomentgenerator
 from shearmomentgenerator import Shear_Moment_Error 
 import numpy as np
+from mainwindow import Ui_MainWindow
 import sys
 
 
@@ -266,7 +267,13 @@ if __name__ == '__main__':
     window = QtGui.QWidget()
     ui = Ui_Beam()
     ui.setupUi(window)
-    
+
+    #Setup main window
+    main_window = QtGui.QMainWindow()
+    main_window_ui = Ui_MainWindow()
+    main_window_ui.setupUi(mainwindow)
+
+    main_window.setCentralWidget(window)
 
     #setup matplotlib
     figure = plt.figure()
@@ -276,7 +283,7 @@ if __name__ == '__main__':
     ui.verticalLayout_3.addWidget(canvas)
 
     #Show the window
-    window.show()
+    main_window.show()
 
     #setup links
     make_links()
