@@ -258,6 +258,7 @@ def settings_clicked():
             step_size = float(dialog_ui.lineEdit_step.text())
 
 
+
 def show_menu():
     pass
 
@@ -281,11 +282,13 @@ def make_first_beam():
 
     ok = False
 
-    while not ok:
-        length, ok = QtGui.QInputDialog.getDouble(window, "Beam Length",
-            "Enter the length of the beam:", 0, 0, sys.float_info.max, 5)
+    length, ok = QtGui.QInputDialog.getDouble(window, "Beam Length",
+        "Enter the length of the beam:", 0, 0, sys.float_info.max, 5)
 
-    return Beam(length)
+    if ok:
+        return Beam(length)
+    else:
+        sys.exit()
 
 
 def make_links():
@@ -329,7 +332,6 @@ if __name__ == '__main__':
 
     #setup context menu
     ui.treeWidget.setContextMenuPolicy(3)
-
 
     #Show the window
     main_window.show()
