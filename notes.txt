@@ -1,0 +1,16 @@
+Ideas:
+
+visual representation of beam
+
+
+maybes:
+
+default text in dialog boxes?
+
+remove interactions by right clicking?
+
+add beam status box: length, number of each type of interaction, number on knowns/ unknowns, solvable, etc.
+
+later:
+
+distribution (py to exe, others?)
