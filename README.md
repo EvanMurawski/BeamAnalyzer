@@ -21,7 +21,7 @@ A program in Python3 to statically analyze beams. This program is a work in prog
 
 **Version History:**
 
--0.3.0 - Current Version, Release: 7/27/2014
+- 0.3.0 - Current Version, Release: 7/27/2014
 
 	- Added a GUI
 

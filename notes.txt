@@ -2,6 +2,7 @@ Ideas:
 
 visual representation of beam
 
+adjust width of columns in tree widget
 
 maybes:
 
