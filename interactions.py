@@ -29,6 +29,13 @@ class Interaction:
         self.magnitude = magnitude
         self.known = known
 
+    def to_list(self):
+
+        return [str(self.__class__.__name__),
+                 str(self.location) + " , "+ str(self.end) if isinstance(self, Dist_Force) else str(self.location), 
+                 str(self.magnitude) if self.known else 'N/A',
+                 "Known" if self.known else "Unknown"]
+
 
 class Force(Interaction):
     """A point force. Subclass of Interaction"""

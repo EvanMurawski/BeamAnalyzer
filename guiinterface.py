@@ -20,10 +20,7 @@ def update_tree(beam):
     ui.treeWidget.clear()
     
     for item in beam.interactions:
-        ui.treeWidget.addTopLevelItem(QtGui.QTreeWidgetItem([item.__class__.__name__, 
-                                                                str(item.location) + " , "+ str(item.end) if isinstance(item, Dist_Force) else str(item.location), 
-                                                                str(item.magnitude) if item.known else 'N/A', 
-                                                                "Known" if item.known else "Unknown"]))
+        ui.treeWidget.addTopLevelItem(QtGui.QTreeWidgetItem(item.to_list()))
 
 
 def unknown_state_change(lineEdit, label, ui, ok):

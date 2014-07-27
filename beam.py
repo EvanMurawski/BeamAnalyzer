@@ -54,11 +54,7 @@ class Beam:
     def __str__(self):
         """A string representation of the beam, using tabulate."""
 
-        table = [[item.__class__.__name__,
-                 str(item.location) + " , "+ str(item.end) if isinstance(item, Dist_Force) else item.location, 
-                 item.magnitude if item.known else 'N/A',
-                 "Known" if item.known else "Unknown"] 
-                 for item in self.interactions]
+        table = [item.to_list() for item in self.interactions]
 
         return tabulate(table, headers= ["", "Location", "Magnitude", "Known"])
 
