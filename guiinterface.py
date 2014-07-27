@@ -152,7 +152,7 @@ def add_distforce_clicked():
 
     #Set the focus
     dialog_ui.lineEdit_start.setFocus()
-    
+
     #Show the dialog
     dialog.exec_()
 
@@ -241,6 +241,22 @@ def settings_clicked():
 def show_menu():
     pass
 
+def clear_selected_clicked():
+    items = ui.treeWidget.selectedItems()
+    
+    removed = False
+
+    for item in items:
+        index = ui.treeWidget.indexOfTopLevelItem(item)
+        if index != -1:
+            removed = True
+            beam.interactions.pop(index)
+
+    if removed:
+        update_tree(beam)
+        plt.clf()
+        canvas.draw()
+
 def make_first_beam():
 
     ok = False
@@ -260,6 +276,7 @@ def make_links():
     ui.pushButton_plot.clicked.connect(plot_clicked)
     ui.pushButton_clear.clicked.connect(clear_clicked)
     ui.pushButton_new.clicked.connect(new_clicked)
+    ui.pushButton_clearselected.clicked.connect(clear_selected_clicked)
     main_window_ui.actionQuit.triggered.connect(quit_clicked)
     main_window_ui.actionSettings.triggered.connect(settings_clicked)
     ui.treeWidget.customContextMenuRequested.connect(show_menu)

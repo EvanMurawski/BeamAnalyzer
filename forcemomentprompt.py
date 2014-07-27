@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'forcemomentprompt.ui'
 #
-# Created: Sat Jul 26 17:28:42 2014
+# Created: Sun Jul 27 15:29:23 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!

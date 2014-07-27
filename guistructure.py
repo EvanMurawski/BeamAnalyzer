@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'guistructure.ui'
 #
-# Created: Sat Jul 26 17:28:42 2014
+# Created: Sun Jul 27 15:29:23 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -112,6 +112,9 @@ class Ui_Beam(object):
         self.pushButton_clear = QtGui.QPushButton(Beam)
         self.pushButton_clear.setObjectName(_fromUtf8("pushButton_clear"))
         self.horizontalLayout_5.addWidget(self.pushButton_clear)
+        self.pushButton_clearselected = QtGui.QPushButton(Beam)
+        self.pushButton_clearselected.setObjectName(_fromUtf8("pushButton_clearselected"))
+        self.horizontalLayout_5.addWidget(self.pushButton_clearselected)
         self.pushButton_new = QtGui.QPushButton(Beam)
         self.pushButton_new.setObjectName(_fromUtf8("pushButton_new"))
         self.horizontalLayout_5.addWidget(self.pushButton_new)
@@ -121,7 +124,7 @@ class Ui_Beam(object):
         self.verticalLayout_1.setStretch(2, 2)
         self.verticalLayout_1.setStretch(3, 40)
         self.horizontalLayout_1.addLayout(self.verticalLayout_1)
-        self.horizontalLayout_1.setStretch(0, 2)
+        self.horizontalLayout_1.setStretch(0, 3)
         self.horizontalLayout_1.setStretch(1, 1)
         self.horizontalLayout.addLayout(self.horizontalLayout_1)
         self.actionDelete = QtGui.QAction(Beam)
@@ -142,6 +145,7 @@ class Ui_Beam(object):
         self.treeWidget.headerItem().setText(2, _translate("Beam", "Magnitude", None))
         self.treeWidget.headerItem().setText(3, _translate("Beam", "Known", None))
         self.pushButton_clear.setText(_translate("Beam", "Clear All", None))
+        self.pushButton_clearselected.setText(_translate("Beam", "Clear Selected", None))
         self.pushButton_new.setText(_translate("Beam", "New Beam", None))
         self.actionDelete.setText(_translate("Beam", "Delete", None))
 

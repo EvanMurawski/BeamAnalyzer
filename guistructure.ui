@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_1" stretch="2,1">
+    <layout class="QHBoxLayout" name="horizontalLayout_1" stretch="3,1">
      <property name="spacing">
       <number>6</number>
      </property>
@@ -197,6 +197,13 @@
           <widget class="QPushButton" name="pushButton_clear">
            <property name="text">
             <string>Clear All</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_clearselected">
+           <property name="text">
+            <string>Clear Selected</string>
            </property>
           </widget>
          </item>
