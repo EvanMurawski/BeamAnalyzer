@@ -13,6 +13,7 @@ import shearmomentgenerator
 from shearmomentgenerator import Shear_Moment_Error 
 import numpy as np
 from mainwindow import Ui_MainWindow
+from settingsdialog import Ui_Dialog_settings
 import sys
 
 
@@ -236,7 +237,26 @@ def quit_clicked():
     app.quit()
 
 def settings_clicked():
-    pass
+    global step_size
+
+    #Create the dialog
+    dialog = QtGui.QDialog()
+    dialog_ui = Ui_Dialog_settings()
+    dialog_ui.setupUi(dialog)
+
+    dialog_ui.lineEdit_step.setText(str(step_size))
+
+    step_validator = QtGui.QDoubleValidator()
+    step_validator.setRange(0.000001, 1000, 6)
+
+    dialog_ui.lineEdit_step.setValidator(step_validator)
+
+    dialog.exec_()
+
+    if dialog.result():
+        if dialog_ui.lineEdit_step.text() and float(dialog_ui.lineEdit_step.text()) != 0:
+            step_size = float(dialog_ui.lineEdit_step.text())
+
 
 def show_menu():
     pass
