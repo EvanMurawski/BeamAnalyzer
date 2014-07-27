@@ -44,6 +44,15 @@ class TestBeamAnalyzer(unittest.TestCase):
 		self.beams[2].add_interaction(Force(15, -20))
 		self.beams[2].add_interaction(Force(30, -10))
 
+		self.beams.append(Beam(10))
+
+		self.beams[3].add_interaction(Force(1, 7))
+		self.beams[3].add_interaction(Dist_Force(2, -5, 7))
+		self.beams[3].add_interaction(Moment(8, 10))
+		self.beams[3].add_interaction(Force(8, 0, False))
+		self.beams[3].add_interaction(Moment(0, 0, False))
+
+
 	#A very simple beam with one known force and two unknown forces
 	def test_beam0(self):
 		solver.solve(self.beams[0])
@@ -124,6 +133,34 @@ class TestBeamAnalyzer(unittest.TestCase):
 		assert abs(shear_moment[int(15/self.STEP_SIZE)][1] - 12.5) < self.ALMOST
 		assert abs(shear_moment[int(20/self.STEP_SIZE)][1] - (-100)) < self.ALMOST
 		assert abs(shear_moment[int(30/self.STEP_SIZE) -1][1] - 0) < self.ALMOST
+
+	def test_beam3(self):
+		solver.solve(self.beams[3])
+
+		#Test the solution
+		self.assertEqual(-48.5, self.beams[3].interactions[0].magnitude)
+		self.assertEqual(18, self.beams[3].interactions[4].magnitude)
+
+		shear_moment = shearmomentgenerator.generate_numerical(self.beams[3], self.STEP_SIZE)
+
+		#Test shear
+		assert abs(shear_moment[0][0] - 0) < self.ALMOST
+		assert abs(shear_moment[int(1/self.STEP_SIZE) -1][0] - 0) < self.ALMOST
+		assert abs(shear_moment[int(1/self.STEP_SIZE) + 1][0] - 7) < self.ALMOST
+		assert abs(shear_moment[int(2/self.STEP_SIZE) -1][0] - 7) < self.ALMOST
+		assert abs(shear_moment[int(7/self.STEP_SIZE) +1][0] - (-18)) < self.ALMOST
+		assert abs(shear_moment[int(8/self.STEP_SIZE) -1][0] - (-18)) < self.ALMOST
+		assert abs(shear_moment[int(8/self.STEP_SIZE) +1][0] - (0)) < self.ALMOST
+		assert abs(shear_moment[int(10/self.STEP_SIZE) -1][0] - (0)) < self.ALMOST
+
+		#Test moment
+		assert abs(shear_moment[0][1] - 48.5) < self.ALMOST
+		assert abs(shear_moment[int(1/self.STEP_SIZE) - 1][1] - 48.5) < self.ALMOST
+		
+		#Had to decrease criteria due to steep slope
+		assert abs(shear_moment[int(8/self.STEP_SIZE) - 1][1] - 10) < 0.02
+		assert abs(shear_moment[int(8/self.STEP_SIZE) +1][1] - 0) < self.ALMOST
+		assert abs(shear_moment[int(10/self.STEP_SIZE) -1][1] - 0) < self.ALMOST
 
  
 	def test_interaction_location_error(self):
