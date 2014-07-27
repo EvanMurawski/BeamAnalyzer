@@ -1,3 +1,11 @@
+"""A GUI, implemented with PyQt4
+
+BeamAnalyzer v0.3.0
+Copyright 2014 Evan Murawski
+License: MIT
+"""
+
+
 from PyQt4 import QtCore, QtGui
 from guistructure import Ui_Beam
 from forcemomentprompt import Ui_Force_Moment_Dialog

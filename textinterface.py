@@ -1,6 +1,6 @@
 """A text based UI, implemented with cmd2: https://bitbucket.org/catherinedevlin/cmd2
 
-BeamAnalyzer v0.2.0
+BeamAnalyzer v0.3.0
 Copyright 2014 Evan Murawski
 License: MIT
 """
