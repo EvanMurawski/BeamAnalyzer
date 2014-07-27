@@ -8,7 +8,7 @@
 
 **Description:**
 
-A program in Python3 to statically analyze beams. This program is a work in progress. It currently has the capability to solve statically determinate beams with point forces, moments, and distributed forces and plot the shear and moment diagram. Works using the text based UI contained in: textinterface.py, as well as the GUI in guiinterface.py.
+A program in Python3 to statically analyze beams. This program is a work in progress. It currently has the capability to solve statically determinate beams with point forces, moments, and distributed forces and plot the shear and moment diagram. Works using the text based UI contained in textinterface.py, as well as the GUI in guiinterface.py.
 
 **Dependencies:**
 
