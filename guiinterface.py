@@ -88,6 +88,8 @@ def interaction_prompt(is_force):
     #Update the visibility of the input boxes if the checkbox state is changed
     dialog_ui.checkBox.stateChanged.connect(lambda: unknown_state_change(dialog_ui.lineEdit_2, dialog_ui.label_magnitude, dialog_ui, ok))
 
+    dialog_ui.lineEdit.setFocus()
+
     #Show the dialog
     dialog.exec_()
 
@@ -128,11 +130,6 @@ def add_distforce_clicked():
     ok = dialog_ui.buttonBox.button(QtGui.QDialogButtonBox.Ok)
     ok.setEnabled(False)
 
-    #Set the initial text
-    dialog_ui.lineEdit_start.setText("0")
-    dialog_ui.lineEdit_magnitude.setText("0")
-    dialog_ui.lineEdit_end.setText("0")
-
     #Setup input validators
     start_validator = QtGui.QDoubleValidator()
     start_validator.setRange(0, beam.length, 5)
@@ -153,6 +150,9 @@ def add_distforce_clicked():
     dialog_ui.lineEdit_end.textChanged.connect(lambda: adjust_ok_buttons_state_dist(dialog_ui, ok, end_validator))
     dialog_ui.lineEdit_magnitude.textChanged.connect(lambda: adjust_ok_buttons_state_dist(dialog_ui, ok, end_validator))
 
+    #Set the focus
+    dialog_ui.lineEdit_start.setFocus()
+    
     #Show the dialog
     dialog.exec_()
 
