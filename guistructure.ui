@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>BeamAnalyzer vAlpha</string>
+   <string>BeamAnalyzer v0.3.0</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
