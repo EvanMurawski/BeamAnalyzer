@@ -15,3 +15,7 @@ add beam status box: length, number of each type of interaction, number on known
 later:
 
 distribution (py to exe, others?)
+
+Current work:
+
+need to reset the visualizer when a new beam is created, or cleared
