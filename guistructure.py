@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'guistructure.ui'
 #
-# Created: Sun Jul 27 17:12:04 2014
+# Created: Sun Jul 27 20:47:19 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -36,6 +36,14 @@ class Ui_Beam(object):
         self.verticalLayout_3 = QtGui.QVBoxLayout()
         self.verticalLayout_3.setSpacing(6)
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
+        self.verticalLayout = QtGui.QVBoxLayout()
+        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.verticalLayout_3.addLayout(self.verticalLayout)
+        self.verticalLayout_4 = QtGui.QVBoxLayout()
+        self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
+        self.verticalLayout_3.addLayout(self.verticalLayout_4)
+        self.verticalLayout_3.setStretch(0, 2)
+        self.verticalLayout_3.setStretch(1, 1)
         self.horizontalLayout_1.addLayout(self.verticalLayout_3)
         self.verticalLayout_1 = QtGui.QVBoxLayout()
         self.verticalLayout_1.setSpacing(6)
