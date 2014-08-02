@@ -188,9 +188,6 @@ def solve_clicked():
 
 def plot_clicked():
 
-    #set the current figure to the main figure - do this for all other places a figure is changed
-    plt.figure(figure.number)
-
     if len(beam.interactions) < 1:
         QtGui.QMessageBox.warning(window,"Error", "There is nothing to plot.")
         return
@@ -302,6 +299,8 @@ def make_first_beam():
         sys.exit()
 
 def setup_visualizer():
+    global plot_vis
+    plot_vis = figure_vis.add_subplot(111)
     plot_vis.axis([0, beam.length, -3, 3])
     canvas_vis.draw()
 
@@ -349,7 +348,7 @@ if __name__ == '__main__':
     figure_vis = plt.figure()
     canvas_vis = FigureCanvas(figure_vis)
     ui.verticalLayout_4.addWidget(canvas_vis)
-    plot_vis = figure_vis.add_subplot(111)
+    plot_vis = None
 
 
     #setup context menu
