@@ -8,7 +8,11 @@ maybes:
 
 default text in dialog boxes?
 
-remove interactions by right clicking?
+icon
+
+indeterminate beams
+
+restructure directories
 
 add beam status box: length, number of each type of interaction, number on knowns/ unknowns, solvable, etc.
 

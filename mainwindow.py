@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Sun Jul 27 17:12:04 2014
+# Created: Sat Aug  2 17:04:24 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -50,6 +50,9 @@ class Ui_MainWindow(object):
         self.actionQuit.setObjectName(_fromUtf8("actionQuit"))
         self.actionSettings = QtGui.QAction(MainWindow)
         self.actionSettings.setObjectName(_fromUtf8("actionSettings"))
+        self.actionAbout = QtGui.QAction(MainWindow)
+        self.actionAbout.setObjectName(_fromUtf8("actionAbout"))
+        self.menuFile.addAction(self.actionAbout)
         self.menuFile.addAction(self.actionQuit)
         self.menuEdit.addAction(self.actionSettings)
         self.menubar.addAction(self.menuFile.menuAction())
@@ -64,4 +67,5 @@ class Ui_MainWindow(object):
         self.menuEdit.setTitle(_translate("MainWindow", "Edit", None))
         self.actionQuit.setText(_translate("MainWindow", "Quit", None))
         self.actionSettings.setText(_translate("MainWindow", "Settings", None))
+        self.actionAbout.setText(_translate("MainWindow", "About", None))
 

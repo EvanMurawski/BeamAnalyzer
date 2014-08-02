@@ -5,6 +5,7 @@ Copyright 2014 Evan Murawski
 License: MIT
 """
 
+about = 'BeamAnalyzer v0.3.0\n\nCopyright 2014 Evan Murawski\nLicense: MIT'
 
 from PyQt4 import QtCore, QtGui
 from guistructure import Ui_Beam
@@ -266,6 +267,8 @@ def settings_clicked():
             step_size = float(dialog_ui.lineEdit_step.text())
 
 
+def about_clicked():
+    QtGui.QMessageBox.about(window, "About BeamAnalyzer", about)
 
 def show_menu():
     pass
@@ -309,6 +312,7 @@ def make_links():
     ui.pushButton_new.clicked.connect(new_clicked)
     ui.pushButton_clearselected.clicked.connect(clear_selected_clicked)
     main_window_ui.actionQuit.triggered.connect(quit_clicked)
+    main_window_ui.actionAbout.triggered.connect(about_clicked)
     main_window_ui.actionSettings.triggered.connect(settings_clicked)
     ui.treeWidget.customContextMenuRequested.connect(show_menu)
 
