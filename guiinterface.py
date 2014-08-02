@@ -298,12 +298,6 @@ def make_first_beam():
     else:
         sys.exit()
 
-def setup_visualizer():
-    global plot_vis
-    plot_vis = figure_vis.add_subplot(111)
-    plot_vis.axis([0, beam.length, -3, 3])
-    canvas_vis.draw()
-
 
 def make_links():
     ui.pushButton_force.clicked.connect(add_force_clicked)
@@ -341,15 +335,8 @@ if __name__ == '__main__':
     figure = plt.figure()
     canvas = FigureCanvas(figure)
     toolbar = NavigationToolbar(canvas, window)
-    ui.verticalLayout.addWidget(toolbar)
-    ui.verticalLayout.addWidget(canvas)
-
-    #setup visualizer
-    figure_vis = plt.figure()
-    canvas_vis = FigureCanvas(figure_vis)
-    ui.verticalLayout_4.addWidget(canvas_vis)
-    plot_vis = None
-
+    ui.verticalLayout_3.addWidget(toolbar)
+    ui.verticalLayout_3.addWidget(canvas)
 
     #setup context menu
     ui.treeWidget.setContextMenuPolicy(3)
@@ -362,9 +349,6 @@ if __name__ == '__main__':
 
     #setup beam
     beam = make_first_beam()
-
-    #setup visualizer
-    setup_visualizer()
 
     #Exit shell when window exits
     sys.exit(app.exec_())

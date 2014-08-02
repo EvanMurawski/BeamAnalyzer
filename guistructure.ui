@@ -23,16 +23,10 @@
       <number>0</number>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="2,1">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <property name="spacing">
         <number>6</number>
        </property>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout"/>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_4"/>
-       </item>
       </layout>
      </item>
      <item>
