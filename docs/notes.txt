@@ -12,8 +12,6 @@ icon
 
 indeterminate beams
 
-restructure directories
-
 add beam status box: length, number of each type of interaction, number on knowns/ unknowns, solvable, etc.
 
 later:
@@ -22,3 +20,7 @@ distribution (py to exe, others?)
 
 dependancies:
 libfreetype6-dev
+g++
+python-dev
+libpng-dev
+python3-pyqt4
