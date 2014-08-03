@@ -33,7 +33,10 @@ def sum_knowns(known_interactions):
     
     return np.array([b_1, b_2])
 
+
 def pointify_interactions(original_interactions):
+    """Returns a list of interactions, with all distributed forces changed to point forces
+    at their average action point. Does not modify the beam."""
 
     pointified_interactions = []
 
@@ -51,7 +54,7 @@ def pointify_interactions(original_interactions):
 def solve(beam):
     """Solves a list of interactions with 2 unknowns. Modifies the list
     it is passed to contain the solved quantities, with known = True. Returns 
-    the modified list."""
+    the modified list. Also modifies the beam."""
 
     list_interactions = pointify_interactions(beam.interactions)
 
@@ -121,5 +124,6 @@ def solve(beam):
 
         return list_interactions
 
+    #Unsupported case
     else:
         raise SolverError('Unsupported case: only 1F,1M and 2F supported.')

@@ -1,4 +1,5 @@
 """Contains the Beam class which defines a Beam object"""
+
 __author__ = 'Evan Murawski'
 
 from backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
@@ -15,6 +16,7 @@ class Beam:
         """
         self.length = length
         self.interactions = []
+
 
     def add_interaction(self, interaction):
         """Adds a single interaction to the beam. Raises an exception if the interaction's location is past
@@ -51,6 +53,7 @@ class Beam:
 
         self.interactions.sort(key=lambda item: item.location)
 
+
     def __str__(self):
         """A string representation of the beam, using tabulate."""
 
@@ -68,6 +71,7 @@ class Beam:
                 knowns += 1
 
         return knowns
+
 
     def count_unknowns(self):
         """Returns the number of unknown interactions in the beam."""

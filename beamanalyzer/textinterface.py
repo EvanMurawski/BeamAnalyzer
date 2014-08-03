@@ -81,6 +81,7 @@ class Text_Interface(cmd.Cmd):
 
         print("Added.") 
 
+
     def do_addm(self, arguments):
         """Add a moment. Usage: 
         Add a known moment: addm location magnitude
@@ -116,6 +117,7 @@ class Text_Interface(cmd.Cmd):
             return
 
         print("Added.") 
+
 
     def do_adddf(self, arguments):
         """Add a distributed force. Usage: 
@@ -154,17 +156,20 @@ class Text_Interface(cmd.Cmd):
         print("\n", self.beam, "\n")    
         print("Unknowns: ",self.beam.count_unknowns(), "\n")   
 
+
     def do_solve(self, arguments):
         """Solve the current beam."""
 
         solver.solve(self.beam)
         self.do_view(None)
 
+
     def do_reset(self, arguments):
         """Reset the beam - lets you create a new beam."""
 
         self.preloop()
         print('Beam reset.')
+
 
     @options([make_option('-s', '--step', type="float", help="Specify the step size."),
             make_option('-a', '--annotate', action="store_true", help="Annotate key points on the graph.")])
@@ -202,6 +207,7 @@ class Text_Interface(cmd.Cmd):
         moment_plot.plot(x, moment)
         plt.title('Moment')
 
+        #Experimental: annotate the plot with the magnitudes of the interactions
         if annotate:
             for interaction in self.beam.interactions:
                 point_one = int(interaction.location / step_size) - 1

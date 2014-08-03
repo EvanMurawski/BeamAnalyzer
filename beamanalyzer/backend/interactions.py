@@ -1,6 +1,7 @@
 """Defines the types of interactions a beam can have. Currently supports 
 only point forces and moments.
 """
+
 __author__ = 'Evan Murawski'
 
 
@@ -12,10 +13,12 @@ class InteractionLocationError(Exception):
     def __init__(self, value):
         self.value = value
 
+
 class Interaction:
     """A general interaction object. All specific interactions
     are subclasses of Interaction.
     """
+
 
     def __init__(self, location, magnitude, known=True):
         """Create a general interaction object. Location must 
@@ -29,7 +32,9 @@ class Interaction:
         self.magnitude = magnitude
         self.known = known
 
+
     def to_list(self):
+        """Generates a list of the properties of the interaction."""
 
         return [str(self.__class__.__name__),
                  str(self.location) + " , "+ str(self.end) if isinstance(self, Dist_Force) else str(self.location), 
@@ -43,8 +48,10 @@ class Force(Interaction):
     def __init__(self, location, magnitude, known=True):
         Interaction.__init__(self, location, magnitude, known)
 
+
 class Moment(Interaction):
     """A point moment. Subclass of Interaction"""
+
 
     def __init__(self, location, magnitude, known=True):
         Interaction.__init__(self, location, magnitude, known)
@@ -52,6 +59,7 @@ class Moment(Interaction):
 
 class Dist_Force(Interaction):
     """A distributed force. Subclass of Interaction. Must be known."""
+
 
     def __init__(self, location, magnitude, end):
 

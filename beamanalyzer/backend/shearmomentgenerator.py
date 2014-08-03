@@ -1,6 +1,7 @@
 """Contains the classes and functions for generating shear and moment diagrams. Currently only supports 
 point forces and moments.
 """
+
 __author__ = 'Evan Murawski'
 
 from backend.beam import Beam
@@ -9,47 +10,18 @@ import backend.solver as solver
 from backend.solver import SolverError
 import numpy as np
 
+
 class Shear_Moment_Error(Exception):
     """Errors for the shear / moment generator"""
     pass
 
 
-#clever method - not currently available from UI. May get more difficult to use
-#after I add distributed forces. Also somewhat pointless, since moments almost
-#have to be done numerically. 
-def generate_shear(beam):
-    """Cleverly generates shear points for the given beam, returned as a list of 2-tuples in
-    the format (location, magnitude)
-    """
-
-    for interaction in beam.interactions:
-        if not interaction.known:
-            raise Shear_Moment_Error('Cannot generate shear diagram for an unsolved beam.')
-
-    shear_points = []
-
-    shear_points.append((0,0))
-    curr_shear = 0
-
-    for item in beam.interactions:
-        if(isinstance(item, Force)):
-            if item.location != 0:
-                shear_points.append((item.location, curr_shear))
-            curr_shear += item.magnitude
-            shear_points.append((item.location, curr_shear))
-
-    shear_points.append((beam.length, 0))
-
-    return shear_points
-
-
 #Only works for point forces
 def gen_sub_beam(beam, sub_length):
     """Generates a subbeam of the given length for purposes
-    of generating internal shear and moment points. Currently 
-    only supports point loads. Distrubuted loads will make 
-    this method a lot more complicated.
+    of generating internal shear and moment points.
     """
+
     sub_beam = Beam(sub_length)
 
     for item in beam.interactions:
@@ -65,13 +37,14 @@ def gen_sub_beam(beam, sub_length):
 
     return sub_beam
 
+
 #Numerical method
 def generate_numerical(beam, step_size):
     """Numerically generates shear and moment points along the length
     of the beam by solving subbeams of increasing length. Step size must
     be specified. step sizes of 0.01 - 0.0001 for a l=10 beam yield reasonable
     solve times on modern CPUs. Returns the result as a list of 2-tuples in the
-    format (shear, moment).
+    format (shear, moment). One point for each step, from 0 to beam.length.
     """
 
     #Verify that the beam is solved.
@@ -96,4 +69,3 @@ def generate_numerical(beam, step_size):
         shear_moment.append((-internal_shear.magnitude, internal_moment.magnitude))
 
     return shear_moment
-

@@ -1,15 +1,11 @@
 __author__ = 'Evan Murawski'
 
 import unittest
-
 import backend
-
 from backend.interactions import *
-
 from backend.beam import Beam
 import backend.solver as solver
 from backend.solver import SolverError
-
 import backend.shearmomentgenerator as shearmomentgenerator
 from backend.shearmomentgenerator import Shear_Moment_Error
 import matplotlib.pyplot as plt

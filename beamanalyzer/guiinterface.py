@@ -5,7 +5,8 @@ Copyright 2014 Evan Murawski
 License: MIT
 """
 
-about = 'BeamAnalyzer v0.3.0\n\nCopyright 2014 Evan Murawski\nLicense: MIT'
+__about = 'BeamAnalyzer v0.3.0\n\nCopyright 2014 Evan Murawski\nLicense: MIT'
+__version = 'v0.3.0'
 
 from PyQt4 import QtCore, QtGui
 from frontend.guistructure import Ui_Beam
@@ -27,33 +28,49 @@ import sys
 
 
 def update_tree(beam):
+    """Updates the tree widget based on the beam it is passed."""
+
     ui.treeWidget.clear()
-    
     for item in beam.interactions:
         ui.treeWidget.addTopLevelItem(QtGui.QTreeWidgetItem(item.to_list()))
 
 
 def unknown_state_change(lineEdit, label, ui, ok):
+    """swaps the visibililty of the lineEdit and label. Updates the ok button state."""
+
     lineEdit.setVisible(not lineEdit.isVisible())
     label.setVisible(not label.isVisible())
     adjust_ok_buttons_state(ui, ok)
 
+
 def force_moment_dialog_input_acceptable(ui):
+    """Checks if the force moment dialog input is acceptable"""
+
     if ui.lineEdit_2.isVisible():
         return ui.lineEdit.hasAcceptableInput() and ui.lineEdit_2.hasAcceptableInput()
     else:
         return ui.lineEdit.hasAcceptableInput()
 
+
 def adjust_ok_buttons_state(ui, ok):
+    """Adjusts the state of the ok buttons for the force moment dialog"""
+
     if force_moment_dialog_input_acceptable(ui):
         ok.setEnabled(True)
     else:
         ok.setEnabled(False)
 
+
 def dist_force_dialog_input_acceptable(ui):
-    return ui.lineEdit_start.hasAcceptableInput() and ui.lineEdit_end.hasAcceptableInput() and ui.lineEdit_magnitude.hasAcceptableInput()
+    """Checks if the input is acceptable in the dist force dialog."""
+
+    return (ui.lineEdit_start.hasAcceptableInput() and ui.lineEdit_end.hasAcceptableInput() and 
+            ui.lineEdit_magnitude.hasAcceptableInput())
+
 
 def adjust_ok_buttons_state_dist(ui, ok, end_validator):
+    """Adjust the state of the ok buttons for teh dist force dialog"""
+
     if dist_force_dialog_input_acceptable(ui):
         ok.setEnabled(True)
     else:
@@ -61,14 +78,14 @@ def adjust_ok_buttons_state_dist(ui, ok, end_validator):
 
     end_validator.setRange(float(ui.lineEdit_start.text()) if ui.lineEdit_start.text() else beam.length, beam.length, 5)
 
+
 def interaction_prompt(is_force):
+    """Create an force moment dialog if is_force, else a moment dialog."""
  
     #Create the dialog
     dialog = QtGui.QDialog()
     dialog_ui = Ui_Force_Moment_Dialog()
     dialog_ui.setupUi(dialog)
-
-    #Setup stuff
 
     #Set the name
     if is_force:
@@ -96,14 +113,16 @@ def interaction_prompt(is_force):
     dialog_ui.lineEdit_2.textChanged.connect(lambda: adjust_ok_buttons_state(dialog_ui, ok))
 
     #Update the visibility of the input boxes if the checkbox state is changed
-    dialog_ui.checkBox.stateChanged.connect(lambda: unknown_state_change(dialog_ui.lineEdit_2, dialog_ui.label_magnitude, dialog_ui, ok))
+    dialog_ui.checkBox.stateChanged.connect(lambda: unknown_state_change(dialog_ui.lineEdit_2, 
+                                            dialog_ui.label_magnitude, dialog_ui, ok))
 
+    #Initially, cursor in first line edit box
     dialog_ui.lineEdit.setFocus()
 
     #Show the dialog
     dialog.exec_()
 
-    #If ok is pressed, create the new force
+    #If ok is pressed, create the new force / moment
     if dialog.result():
         if is_force:
             if dialog_ui.checkBox.checkState():
@@ -116,16 +135,23 @@ def interaction_prompt(is_force):
             else:
                 interaction = Moment(float(dialog_ui.lineEdit.text()), float(dialog_ui.lineEdit_2.text()))
 
+        #Add the interaction to the beam.
         beam.add_interaction(interaction)
 
         update_tree(beam)
 
+
 def add_force_clicked():
+    """If the add force button is clicked, display the prompt"""
+
     interaction_prompt(True)
 
 
 def add_moment_clicked():
+    """If the add moment button is clicked, display the prompt"""
+
     interaction_prompt(False)
+
 
 def add_distforce_clicked():
 
@@ -133,8 +159,6 @@ def add_distforce_clicked():
     dialog = QtGui.QDialog()
     dialog_ui = Ui_Dist_Force_Dialog()
     dialog_ui.setupUi(dialog)
-
-    #Setup stuff
          
     #Initially, hide the ok button
     ok = dialog_ui.buttonBox.button(QtGui.QDialogButtonBox.Ok)
@@ -166,18 +190,20 @@ def add_distforce_clicked():
     #Show the dialog
     dialog.exec_()
 
-    #If ok is pressed, create the new force
+    #If ok is pressed, create the new distributed force
     if dialog.result():
 
-        interaction = Dist_Force(float(dialog_ui.lineEdit_start.text()), float(dialog_ui.lineEdit_magnitude.text()), float(dialog_ui.lineEdit_end.text()))
+        interaction = Dist_Force(float(dialog_ui.lineEdit_start.text()), float(dialog_ui.lineEdit_magnitude.text()), 
+                                 float(dialog_ui.lineEdit_end.text()))
 
         beam.add_interaction(interaction)
 
         update_tree(beam)
 
 
-
 def solve_clicked():
+    """Solve is clicked - solve the beam and update the tree."""
+
     try:
         solver.solve(beam)
     except SolverError as e:
@@ -187,6 +213,7 @@ def solve_clicked():
     update_tree(beam)
 
 def plot_clicked():
+    """Generate and display the force moment plot."""
 
     if len(beam.interactions) < 1:
         QtGui.QMessageBox.warning(window,"Error", "There is nothing to plot.")
@@ -216,23 +243,31 @@ def plot_clicked():
     moment_plot.plot(x, moment)
     plt.title('Moment')
 
-    shear_plot.axis([min(x), max(x), min(shear) - plot_margin * (max(shear)-min(shear)), max(shear) + plot_margin * (max(shear)-min(shear))])
-    moment_plot.axis([min(x), max(x), min(moment) - plot_margin * (max(moment)-min(moment)), max(moment) + plot_margin * (max(moment)-min(moment))])
+    #apply a buffer around the plot for easier viewing
+    shear_plot.axis([min(x), max(x), min(shear) - plot_margin * (max(shear)-min(shear)), max(shear) + 
+                        plot_margin * (max(shear)-min(shear))])
+
+    moment_plot.axis([min(x), max(x), min(moment) - plot_margin * (max(moment)-min(moment)), max(moment) + 
+                        plot_margin * (max(moment)-min(moment))])
 
     #update the canvas
     canvas.draw()
 
 def clear_clicked():
+    """Clear the beam of all interactions. Update the tree and clear the force moment plot."""
+
     global beam
     beam = Beam(beam.length)
     update_tree(beam)
     plt.clf()
     canvas.draw()
 
+
 def new_clicked():
+    """Prompt for a new beam length. If input is ok, clear the beam, tree, and plot. 
+    Create a new beam of the given length."""
 
     global beam
-
     length, ok = QtGui.QInputDialog.getDouble(window, "Beam Length",
             "Enter the length of the beam:", 0, 0, sys.float_info.max, 5)
     if ok:
@@ -241,10 +276,16 @@ def new_clicked():
         plt.clf()
         canvas.draw()
 
+
 def quit_clicked():
+    """Quit the application."""
+
     app.quit()
 
 def settings_clicked():
+    """Create a settings dialog, containing the option to change the step size.
+    If a valid new step size is entered, update the step size."""
+
     global step_size
 
     #Create the dialog
@@ -252,29 +293,32 @@ def settings_clicked():
     dialog_ui = Ui_Dialog_settings()
     dialog_ui.setupUi(dialog)
 
+    #Populate the line edit
     dialog_ui.lineEdit_step.setText(str(step_size))
 
+    #set up the validator and apply it
     step_validator = QtGui.QDoubleValidator()
     step_validator.setRange(0.000001, 1000, 6)
-
     dialog_ui.lineEdit_step.setValidator(step_validator)
 
     dialog.exec_()
 
+    #Update the step size if necessary
     if dialog.result():
         if dialog_ui.lineEdit_step.text() and float(dialog_ui.lineEdit_step.text()) != 0:
             step_size = float(dialog_ui.lineEdit_step.text())
 
 
 def about_clicked():
-    QtGui.QMessageBox.about(window, "About BeamAnalyzer", about)
+    """Show the about dialog."""
 
-def show_menu():
-    pass
+    QtGui.QMessageBox.about(window, "About BeamAnalyzer", __about)
+
 
 def clear_selected_clicked():
+    """Clear the selected item, update the tree and clear the plot if something was removed."""
+
     items = ui.treeWidget.selectedItems()
-    
     removed = False
 
     for item in items:
@@ -288,10 +332,11 @@ def clear_selected_clicked():
         plt.clf()
         canvas.draw()
 
+
 def make_first_beam():
+    """Make the first beam. This is required. If it is not done, exit the app."""
 
     ok = False
-
     length, ok = QtGui.QInputDialog.getDouble(window, "Beam Length",
         "Enter the length of the beam:", 0, 0, sys.float_info.max, 5)
 
@@ -302,6 +347,8 @@ def make_first_beam():
 
 
 def make_links():
+    """Establish the links between various actions and their corresponding functions."""
+
     ui.pushButton_force.clicked.connect(add_force_clicked)
     ui.pushButton_moment.clicked.connect(add_moment_clicked)
     ui.pushButton_distforce.clicked.connect(add_distforce_clicked)
@@ -313,11 +360,11 @@ def make_links():
     main_window_ui.actionQuit.triggered.connect(quit_clicked)
     main_window_ui.actionAbout.triggered.connect(about_clicked)
     main_window_ui.actionSettings.triggered.connect(settings_clicked)
-    ui.treeWidget.customContextMenuRequested.connect(show_menu)
+
 
 if __name__ == '__main__':
 
-    #Other Global Vars
+    #Global vars
     step_size = 0.01
     plot_margin = 0.15
 
@@ -331,7 +378,6 @@ if __name__ == '__main__':
     main_window = QtGui.QMainWindow()
     main_window_ui = Ui_MainWindow()
     main_window_ui.setupUi(main_window)
-
     main_window.setCentralWidget(window)
 
     #setup matplotlib
@@ -341,11 +387,8 @@ if __name__ == '__main__':
     ui.verticalLayout_3.addWidget(toolbar)
     ui.verticalLayout_3.addWidget(canvas)
 
-    #setup context menu
-    ui.treeWidget.setContextMenuPolicy(3)
-
-    #Show the window
-    main_window.show()
+    #Show the window, maximized
+    main_window.showMaximized()
 
     #setup links
     make_links()
@@ -355,5 +398,3 @@ if __name__ == '__main__':
 
     #Exit shell when window exits
     sys.exit(app.exec_())
-
-
