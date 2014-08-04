@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './beamanalyzer/frontend/settingsdialog.ui'
 #
-# Created: Sun Aug  3 18:24:05 2014
+# Created: Sun Aug  3 21:06:54 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!

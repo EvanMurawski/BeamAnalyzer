@@ -1,12 +1,12 @@
 """A GUI, implemented with PyQt4
 
-BeamAnalyzer v0.3.0
+BeamAnalyzer v0.4.0
 Copyright 2014 Evan Murawski
 License: MIT
 """
 
-__about = 'BeamAnalyzer v0.3.0\n\nCopyright 2014 Evan Murawski\nLicense: MIT'
-__version = 'v0.3.0'
+__about = 'BeamAnalyzer v0.4.0\n\nCopyright 2014 Evan Murawski\nLicense: MIT'
+__version = 'v0.4.0'
 
 from PyQt4 import QtCore, QtGui
 from frontend.guistructure import Ui_Beam

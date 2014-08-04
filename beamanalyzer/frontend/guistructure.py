@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './beamanalyzer/frontend/guistructure.ui'
 #
-# Created: Sun Aug  3 18:24:05 2014
+# Created: Sun Aug  3 21:06:54 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -134,7 +134,7 @@ class Ui_Beam(object):
         QtCore.QMetaObject.connectSlotsByName(Beam)
 
     def retranslateUi(self, Beam):
-        Beam.setWindowTitle(_translate("Beam", "BeamAnalyzer v0.3.0", None))
+        Beam.setWindowTitle(_translate("Beam", "BeamAnalyzer v0.4.0", None))
         self.pushButton_force.setText(_translate("Beam", "Add Force", None))
         self.pushButton_moment.setText(_translate("Beam", "Add Moment", None))
         self.pushButton_distforce.setText(_translate("Beam", "Add Distributed Force", None))

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './beamanalyzer/frontend/mainwindow.ui'
 #
-# Created: Sun Aug  3 18:24:05 2014
+# Created: Sun Aug  3 21:06:54 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "BeamAnalyzer v0.3.0", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "BeamAnalyzer v0.4.0", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit", None))
         self.actionQuit.setText(_translate("MainWindow", "Quit", None))
