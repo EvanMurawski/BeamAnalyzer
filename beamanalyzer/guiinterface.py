@@ -17,7 +17,7 @@ from backend.beam import Beam
 import backend.solver as solver
 from backend.solver import SolverError
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
 import backend.shearmomentgenerator as shearmomentgenerator
 from backend.shearmomentgenerator import Shear_Moment_Error 
