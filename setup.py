@@ -6,4 +6,7 @@ setup(
 	url='https://github.com/EvanMurawski/BeamAnalyzer',
 	license='MIT',
 	author='Evan Murawski',
-	packages=find_packages())
+	package_dir = {'': 'beamanalyzer'},
+	packages=['frontend', 'backend'],
+	options = {"py2exe": {"packages": ["beamanalyzer.frontend", "beamanalyzer.backend"]}},
+	windows = ["beamanalyzer/guiinterface.py"])
