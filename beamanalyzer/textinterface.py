@@ -6,14 +6,24 @@ License: MIT
 """
 __author__ = 'Evan Murawski'
 
-from backend.beam import Beam
-from backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
+try:
+    from beamanalyzer.backend.beam import Beam
+    from beamanalyzer.backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
+    import beamanalyzer.backend.solver as solver
+    from beamanalyzer.backend.solver import SolverError
+    import beamanalyzer.backend.shearmomentgenerator as shearmomentgenerator
+    from beamanalyzer.backend.shearmomentgenerator import Shear_Moment_Error
+
+except ImportError:
+    from backend.beam import Beam
+    from backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
+    import backend.solver as solver
+    from backend.solver import SolverError
+    import backend.shearmomentgenerator as shearmomentgenerator
+    from backend.shearmomentgenerator import Shear_Moment_Error
+
 import cmd2 as cmd
 from cmd2 import options, make_option
-import backend.solver as solver
-from backend.solver import SolverError
-import backend.shearmomentgenerator as shearmomentgenerator
-from backend.shearmomentgenerator import Shear_Moment_Error
 import matplotlib.pyplot as plt
 import numpy as np
 

@@ -2,7 +2,11 @@
 
 __author__ = 'Evan Murawski'
 
-from backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
+try:
+    from beamanalyzer.backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
+except ImportError:
+    from backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
+    
 from tabulate import tabulate
 
 class Beam:

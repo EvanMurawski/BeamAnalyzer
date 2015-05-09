@@ -4,10 +4,17 @@ point forces and moments.
 
 __author__ = 'Evan Murawski'
 
-from backend.beam import Beam
-from backend.interactions import Interaction, InteractionLocationError, Force, Moment, Dist_Force
-import backend.solver as solver
-from backend.solver import SolverError
+try:
+    from beamanalyzer.backend.beam import Beam
+    from beamanalyzer.backend.interactions import Interaction, InteractionLocationError, Force, Moment, Dist_Force
+    import beamanalyzer.backend.solver as solver
+    from beamanalyzer.backend.solver import SolverError
+except ImportError:
+    from backend.beam import Beam
+    from backend.interactions import Interaction, InteractionLocationError, Force, Moment, Dist_Force
+    import backend.solver as solver
+    from backend.solver import SolverError
+
 import numpy as np
 
 

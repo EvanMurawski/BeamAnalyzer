@@ -4,9 +4,14 @@ is currently no support for distributed forces.
 """
 __author__ = 'Evan Murawski'
 
+try:
+    from beamanalyzer.backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
+    from beamanalyzer.backend.beam import Beam
+except ImportError:
+    from backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
+    from backend.beam import Beam
+
 import numpy as np
-from backend.interactions import InteractionLocationError, Interaction, Force, Moment, Dist_Force
-from backend.beam import Beam
 
 class SolverError(Exception):
     """Solver Errors"""

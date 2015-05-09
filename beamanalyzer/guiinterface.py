@@ -8,22 +8,43 @@ License: MIT
 __about = 'BeamAnalyzer v0.4.0\n\nCopyright 2014 Evan Murawski\nLicense: MIT'
 __version = 'v0.4.0'
 
+
+#If running from .exe
+try:
+    from beamanalyzer.frontend.guistructure import Ui_Beam
+    from beamanalyzer.frontend.forcemomentprompt import Ui_Force_Moment_Dialog
+    from beamanalyzer.frontend.distforceprompt import Ui_Dist_Force_Dialog
+    from beamanalyzer.frontend.mainwindow import Ui_MainWindow
+    from beamanalyzer.frontend.settingsdialog import Ui_Dialog_settings
+
+    from beamanalyzer.backend.interactions import Force, Interaction, InteractionLocationError, Moment, Dist_Force
+    from beamanalyzer.backend.beam import Beam
+    import beamanalyzer.backend.solver as solver
+    import beamanalyzer.backend.shearmomentgenerator as shearmomentgenerator
+    from beamanalyzer.backend.shearmomentgenerator import Shear_Moment_Error 
+    from beamanalyzer.backend.solver import SolverError
+
+    #If running from source
+except ImportError:
+    from frontend.guistructure import Ui_Beam
+    from frontend.forcemomentprompt import Ui_Force_Moment_Dialog
+    from frontend.distforceprompt import Ui_Dist_Force_Dialog
+    from frontend.mainwindow import Ui_MainWindow
+    from frontend.settingsdialog import Ui_Dialog_settings
+
+    from backend.interactions import Force, Interaction, InteractionLocationError, Moment, Dist_Force
+    from backend.beam import Beam
+    import backend.solver as solver
+    import backend.shearmomentgenerator as shearmomentgenerator
+    from backend.shearmomentgenerator import Shear_Moment_Error 
+    from backend.solver import SolverError
+
+
 from PyQt4 import QtCore, QtGui
-from frontend.guistructure import Ui_Beam
-from frontend.forcemomentprompt import Ui_Force_Moment_Dialog
-from frontend.distforceprompt import Ui_Dist_Force_Dialog
-from backend.interactions import Force, Interaction, InteractionLocationError, Moment, Dist_Force
-from backend.beam import Beam
-import backend.solver as solver
-from backend.solver import SolverError
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
-import backend.shearmomentgenerator as shearmomentgenerator
-from backend.shearmomentgenerator import Shear_Moment_Error 
 import numpy as np
-from frontend.mainwindow import Ui_MainWindow
-from frontend.settingsdialog import Ui_Dialog_settings
 import sys
 
 
