@@ -1,4 +1,8 @@
 from setuptools import setup, find_packages
+try:
+	import py2exe
+except ImportError:
+	pass
 
 setup(
 	name='beamanalyzer',
